@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+  body{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    align-items: center;
+    background-color: #184655;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000'%3E%3Cg %3E%3Ccircle fill='%23184655' cx='50' cy='0' r='50'/%3E%3Cg fill='%23194b5d' %3E%3Ccircle cx='0' cy='50' r='50'/%3E%3Ccircle cx='100' cy='50' r='50'/%3E%3C/g%3E%3Ccircle fill='%231b5164' cx='50' cy='100' r='50'/%3E%3Cg fill='%231d566c' %3E%3Ccircle cx='0' cy='150' r='50'/%3E%3Ccircle cx='100' cy='150' r='50'/%3E%3C/g%3E%3Ccircle fill='%231f5c74' cx='50' cy='200' r='50'/%3E%3Cg fill='%2322617c' %3E%3Ccircle cx='0' cy='250' r='50'/%3E%3Ccircle cx='100' cy='250' r='50'/%3E%3C/g%3E%3Ccircle fill='%23256785' cx='50' cy='300' r='50'/%3E%3Cg fill='%23296c8d' %3E%3Ccircle cx='0' cy='350' r='50'/%3E%3Ccircle cx='100' cy='350' r='50'/%3E%3C/g%3E%3Ccircle fill='%232c7295' cx='50' cy='400' r='50'/%3E%3Cg fill='%2331779e' %3E%3Ccircle cx='0' cy='450' r='50'/%3E%3Ccircle cx='100' cy='450' r='50'/%3E%3C/g%3E%3Ccircle fill='%23367da7' cx='50' cy='500' r='50'/%3E%3Cg fill='%233b82af' %3E%3Ccircle cx='0' cy='550' r='50'/%3E%3Ccircle cx='100' cy='550' r='50'/%3E%3C/g%3E%3Ccircle fill='%234188b8' cx='50' cy='600' r='50'/%3E%3Cg fill='%23478dc1' %3E%3Ccircle cx='0' cy='650' r='50'/%3E%3Ccircle cx='100' cy='650' r='50'/%3E%3C/g%3E%3Ccircle fill='%234d93ca' cx='50' cy='700' r='50'/%3E%3Cg fill='%235498d3' %3E%3Ccircle cx='0' cy='750' r='50'/%3E%3Ccircle cx='100' cy='750' r='50'/%3E%3C/g%3E%3Ccircle fill='%235b9edc' cx='50' cy='800' r='50'/%3E%3Cg fill='%2363a3e4' %3E%3Ccircle cx='0' cy='850' r='50'/%3E%3Ccircle cx='100' cy='850' r='50'/%3E%3C/g%3E%3Ccircle fill='%236ba8ed' cx='50' cy='900' r='50'/%3E%3Cg fill='%2373aef6' %3E%3Ccircle cx='0' cy='950' r='50'/%3E%3Ccircle cx='100' cy='950' r='50'/%3E%3C/g%3E%3Ccircle fill='%237CB3FF' cx='50' cy='1000' r='50'/%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
+    background-size: contain;
+  }
+  #stream-container {
+    align-items: center;
+  }
+
+  h2{
+    color: white;
+  }
+
+  #stream-image {
+    border-radius: 4px;
+    max-width: 100%;
+    max-height: 100vh;
+  }
+
+  .color-button {
+  display: inline-block;
+  padding: 5px 15px;
+  background-color: rgb(240, 248, 255);
+  color: hsl(174, 47%, 33%);
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.color-button:hover {
+  background-color: rgba(240, 248, 255, 0.758); /* Cambia el nivel de transparencia ajustando el último valor (0.1) */
+  color: hsl(174, 47%, 33%);
+}
+
+  #colorShow {
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+  }
+  
+
+
+
+</style>
+<body>
+<center>
+<div class="w3-container">
+    <div class="w3-container w3-cell w3-mobile">
+      <button class="color-button" id="offButton">Apagar</button>
+      <button class="color-button" id="cyanButton">Cyan</button>
+      <button class="color-button" id="greenButton">Verde</button>
+      <button class="color-button" id="blueButton">Azul</button>
+      <button class="color-button" id="yellowButton">Amarillo</button>
+      <button class="color-button" id="redButton">Rojo</button>
+      <button class="color-button" id="whiteButton">Blanco</button>
+    </div>
+    <br>
+    <div class="w3-container w3-cell w3-mobile" id="stream-container">
+      <img id="stream-image" src="" alt="Webcam Stream" />
+      <h2 id="Sensores"></h2>
+      <div id="colorShow"></div>
+    
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.0/socket.io.js"></script>
+<script src="https://www.w3schools.com/lib/w3color.js"></script>
+<script>
+  const socket = io();
+  const imageElement = document.getElementById('stream-image');
+  const offButton = document.getElementById('offButton');
+  const cyanButton = document.getElementById('cyanButton');
+  const greenButton = document.getElementById('greenButton');
+  const blueButton = document.getElementById('blueButton');
+  const yellowButton = document.getElementById('yellowButton');
+  const redButton = document.getElementById('redButton');
+  const whiteButton = document.getElementById('whiteButton');
+  const colorShow = document.getElementById('colorShow');
+
+  socket.on('image', (imageData) => {
+    imageElement.src = `data:image/jpeg;base64, ${imageData}`;
+  });
+
+  offButton.addEventListener('click', () => {
+    const rgb = w3color('black');
+    colorShow.style.backgroundColor = rgb.toRgbString();
+    socket.emit('rgbLed', rgb);
+  });
+
+  cyanButton.addEventListener('click', () => {
+    const rgb = w3color('cyan');
+    colorShow.style.backgroundColor = rgb.toRgbString();
+    socket.emit('rgbLed', rgb);
+  });
+
+  greenButton.addEventListener('click', () => {
+    const rgb = w3color('green');
+    colorShow.style.backgroundColor = rgb.toRgbString();
+    socket.emit('rgbLed', rgb);
+  });
+
+  blueButton.addEventListener('click', () => {
+    const rgb = w3color('blue');
+    colorShow.style.backgroundColor = rgb.toRgbString();
+    socket.emit('rgbLed', rgb);
+  });
+
+  yellowButton.addEventListener('click', () => {
+    const rgb = w3color('orange');
+    colorShow.style.backgroundColor = rgb.toRgbString();
+    socket.emit('rgbLed', rgb);
+  });
+
+  redButton.addEventListener('click', () => {
+    const rgb = w3color('red');
+    colorShow.style.backgroundColor = rgb.toRgbString();
+    socket.emit('rgbLed', rgb);
+  });
+
+  whiteButton.addEventListener('click', () => {
+    const rgb = w3color('white');
+    colorShow.style.backgroundColor = rgb.toRgbString();
+    socket.emit('rgbLed', rgb);
+  });
+
+  
+  socket.on('sens', function(data){		
+    console.log(data);		
+    let sens = document.getElementById('Sensores');		
+    sens.innerHTML = data;});
+
+</script>
+</center>
+</body>
+</html>
